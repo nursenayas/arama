@@ -1,7 +1,6 @@
 // Backend URL'sini burada sabit olarak belirtin
-// Backend URL'sini burada sabit olarak belirtin
-const BACKEND_URL = "https://locsaverapi20240122143141.azurewebsites.net"; 
-const CORS_PROXY = "https://corsproxy.io/?"; // CORS proxy URL'si
+const BACKEND_URL = "https://locsaverapi20240122143141.azurewebsites.net"; // Backend'in çalıştığı URL'yi buraya yazın
+
 // Değişkenler
 let connection;
 let peerConnection;
@@ -108,14 +107,9 @@ connectButton.addEventListener('click', async () => {
 
 // SignalR bağlantısını oluştur
 function createConnection(token) {
-    // CORS proxy kullanarak URL oluştur
-    const hubUrl = `${CORS_PROXY}${encodeURIComponent(BACKEND_URL)}/chats/chatHub`;
-    
     connection = new signalR.HubConnectionBuilder()
-        .withUrl(hubUrl, {
-            accessTokenFactory: () => token,
-            skipNegotiation: true, // WebSocket'e doğrudan bağlan
-            transport: signalR.HttpTransportType.WebSockets // Sadece WebSocket kullan
+        .withUrl(`${BACKEND_URL}/chats/chatHub`, {
+            accessTokenFactory: () => token
         })
         .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
         .configureLogging(signalR.LogLevel.Debug)
